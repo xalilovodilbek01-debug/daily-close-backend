@@ -28,4 +28,17 @@ router.post('/login', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+router.get('/reset-admin', async (req, res, next) => {
+  try {
+    const hash = await bcrypt.hash('Admin1234', 10);
+    await query(
+      `INSERT INTO users (name, email, password, role)
+       VALUES ('Bosh Admin', 'admin@korxona.uz', $1, 'admin')
+       ON CONFLICT (email) DO UPDATE SET password = $1`,
+      [hash]
+    );
+    res.json({ ok: true });
+  } catch (err) { next(err); }
+});
+
 export default router;
