@@ -34,7 +34,7 @@ router.get('/reset-admin', async (req, res, next) => {
     await query(
       `INSERT INTO users (name, email, password, role)
        VALUES ('Bosh Admin', 'admin@korxona.uz', $1, 'admin')
-       ON CONFLICT (email) DO UPDATE SET password = $1`,
+       ON CONFLICT (email) DO UPDATE SET password = $1, role = 'admin'`,
       [hash]
     );
     res.json({ ok: true });
