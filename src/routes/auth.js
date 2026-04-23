@@ -28,4 +28,17 @@ router.post('/login', async (req, res, next) => {
   } catch (err) { next(err); }
 });
 
+// Vaqtinchalik: admin parolini tiklash (bir marta ishlatib o'chiring)
+router.get('/setup-admin', async (req, res, next) => {
+  try {
+    const hash = await bcrypt.hash('Admin1234', 10);
+    await query(
+      `INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, 'admin')
+       ON CONFLICT (email) DO UPDATE SET password = $3`,
+      ['Bosh Admin', 'admin@korxona.uz', hash]
+    );
+    res.json({ ok: true, message: 'Admin tayyor. Email: admin@korxona.uz, Parol: Admin1234' });
+  } catch (err) { next(err); }
+});
+
 export default router;
